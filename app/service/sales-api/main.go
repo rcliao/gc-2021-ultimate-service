@@ -10,7 +10,7 @@ import (
 var build = "develop"
 
 func main() {
-	log.Println("starting service. build:", build)
+	log.Println("starting service TEST. build:", build)
 	defer log.Println("shutdown")
 
 	// to receive the shutdown signal from Kubernetes
