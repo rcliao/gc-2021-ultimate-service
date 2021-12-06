@@ -3,6 +3,10 @@ SHELL := /bin/bash
 run:
 	go run app/service/sales-api/main.go
 
+tidy:
+	go mod tidy
+	go mod vendor
+
 # ==============================================================================
 
 # $(shell git rev-parse --short HEAD)
