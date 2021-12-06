@@ -1,0 +1,30 @@
+FROM golang:1.17 as build_sales-api
+ENV CGO_ENABLED 0
+ARG BUILD_REF
+
+# If you don't want to vendor
+# RUN mkdir /service
+# COPY go.* /service/
+# WORKDIR /service
+# RUN go mod download
+
+COPY . /service
+
+WORKDIR /service/app/service/sales-api
+RUN GO build -ldflags "-X main.build=${BUILD_REF}"
+
+# Run the Go Binary in Alpine.
+FROM alpine:3.15
+ARG BUILD_DATE
+ARG BUILD_REF
+COPY --from=build_sales-api /service/zarf/keys/. /service/zarf/keys/.
+COPY --from=build_sales-api /service/app/tooling/sales-admin/sales-admin /service/sales-admin
+COPY --from=build_sales-api /service/app/service/sales-api/sales-api /service/sales-api
+WORKDIR /service
+CMD ["./sales-api"]
+
+LABEL org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.title="sales-api" \
+      org.opencontainers.image.authors="Eric Liao <rcliao01@gmail.com>" \
+      org.opencontainers.image.source="https://github.com/rcliao/gc-2021-ultimate-service/app/service/sales-api" \
+      org.opencontainers.image.revision="${BUILD_REF}"
