@@ -63,9 +63,10 @@ func (a *App) Handle(method string, path string, handler Handler, mw ...Middlewa
 		ctx = context.WithValue(ctx, key, &v)
 
 		if err := handler(ctx, w, r); err != nil {
-			// TODO
+			// if the error is not handled all the way to root handler, we shutdown
+			a.SignalShutdown()
+			return
 		}
-		// TO SOMETHING AFTER
 	}
 
 	a.ContextMux.Handle(method, path, h)
