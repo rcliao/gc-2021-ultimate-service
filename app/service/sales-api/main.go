@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/ardanlabs/conf/v2"
+	"github.com/rcliao/gc-2021-ultimate-service/app/service/sales-api/handler"
 	"github.com/rcliao/gc-2021-ultimate-service/foundation/logger"
 	"go.uber.org/automaxprocs/maxprocs"
 	"go.uber.org/zap"
@@ -133,7 +134,7 @@ func run(log *zap.SugaredLogger) error {
 	// Construct a server to service the requests against the mux.
 	api := http.Server{
 		Addr:         cfg.Web.APIHost,
-		Handler:      nil,
+		Handler:      handler.APIMux(shutdown, log),
 		ReadTimeout:  cfg.Web.ReadTimeout,
 		WriteTimeout: cfg.Web.WriteTimeout,
 		IdleTimeout:  cfg.Web.IdleTimeout,
