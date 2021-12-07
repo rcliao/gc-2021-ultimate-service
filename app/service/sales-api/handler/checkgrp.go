@@ -2,8 +2,9 @@ package handler
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
+
+	"github.com/rcliao/gc-2021-ultimate-service/foundation/web"
 )
 
 func readiness(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
@@ -12,5 +13,5 @@ func readiness(ctx context.Context, w http.ResponseWriter, r *http.Request) erro
 	}{
 		Status: "Ok",
 	}
-	return json.NewEncoder(w).Encode(status)
+	return web.Respond(ctx, w, status, http.StatusOK)
 }
